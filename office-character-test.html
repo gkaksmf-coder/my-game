@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff9ef">
+  <meta name="description" content="질문 5개로 알아보는 나의 직장인 캐릭터 테스트">
+  <title>나의 직장인 캐릭터는? | 오피스 캐릭터 테스트</title>
+  <style>
+    :root { font-family: "Arial Rounded MT Bold", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; color: #332c42; background: #fff9ef; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 3px solid #8b61ee; outline-offset: 4px; }
+    .blob { position: fixed; z-index: -1; border-radius: 50%; filter: blur(4px); pointer-events: none; }
+    .blob.a { width: 330px; height: 330px; top: -145px; left: -135px; background: #ffe2e9; }
+    .blob.b { width: 390px; height: 390px; right: -190px; bottom: -155px; background: #dff6ee; }
+    .page { width: min(100% - 32px, 760px); margin: 0 auto; padding: 34px 0 64px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 900; letter-spacing: -.5px; }
+    .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: #ffb3bd; box-shadow: 0 4px 0 #ec889a; font-size: 19px; }
+    .header-note { color: #9b8e9a; font-size: 13px; font-weight: 700; }
+    .card { position: relative; overflow: hidden; background: #fff; border: 2px solid #f2e8e5; border-radius: 30px; box-shadow: 0 15px 0 #f0e7dd, 0 25px 42px rgba(78, 49, 70, .08); }
+    .screen { display: none; }
+    .screen.active { display: block; animation: appear .35s ease both; }
+    @keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .intro { text-align: center; padding: 42px 38px 44px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 5px; padding: 8px 13px; border-radius: 999px; background: #f2eaff; color: #7552bd; font-size: 13px; font-weight: 900; }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin: 18px 0 12px; font-size: clamp(32px, 6vw, 51px); line-height: 1.22; letter-spacing: -2.6px; }
+    .highlight { position: relative; white-space: nowrap; color: #ef7787; }
+    .highlight::after { content: ""; position: absolute; left: 2%; bottom: -3px; width: 96%; height: 8px; border-radius: 100%; background: #ffe190; z-index: -1; transform: rotate(-2deg); }
+    .intro-copy { color: #7f7484; line-height: 1.8; font-size: 16px; }
+    .character-row { display: flex; justify-content: center; gap: 12px; margin: 28px 0 32px; }
+    .character-peek { display: grid; place-items: center; width: 76px; height: 82px; border-radius: 24px; font-size: 38px; box-shadow: inset 0 -5px 0 rgba(74, 42, 65, .07); transform: rotate(var(--angle)); }
+    .character-peek:nth-child(1) { background: #ffe0e7; --angle: -8deg; }
+    .character-peek:nth-child(2) { background: #e7dcff; --angle: 5deg; }
+    .character-peek:nth-child(3) { background: #d9f4e8; --angle: -5deg; }
+    .character-peek:nth-child(4) { background: #fff0ba; --angle: 8deg; }
+    .primary { border: 0; color: #fff; background: #7e5ade; border-radius: 16px; padding: 17px 30px; font-size: 17px; font-weight: 900; box-shadow: 0 6px 0 #5d3eaa; transition: transform .15s, box-shadow .15s; }
+    .primary:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #5d3eaa; }
+    .primary:active { transform: translateY(4px); box-shadow: 0 2px 0 #5d3eaa; }
+    .meta { margin: 22px 0 0; color: #a59aa6; font-size: 13px; font-weight: 700; }
+    .quiz { padding: 30px 38px 38px; }
+    .quiz-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; color: #8f80a0; font-size: 14px; font-weight: 900; }
+    .counter strong { color: #805cdd; font-size: 20px; }
+    .progress { height: 12px; border-radius: 999px; background: #f0ecf3; overflow: hidden; }
+    .progress-fill { height: 100%; width: 20%; border-radius: inherit; background: linear-gradient(90deg, #ffacbb, #936de7); transition: width .35s ease; }
+    .question-emoji { width: 70px; height: 70px; display: grid; place-items: center; margin: 29px auto 15px; background: #fff2da; border-radius: 22px; font-size: 34px; transform: rotate(-6deg); }
+    h2 { font-size: clamp(23px, 4.5vw, 31px); line-height: 1.4; letter-spacing: -1.4px; }
+    .quiz h2 { min-height: 87px; margin-bottom: 24px; text-align: center; }
+    .options { display: grid; gap: 12px; }
+    .option { width: 100%; display: flex; align-items: center; gap: 15px; text-align: left; border: 2px solid #eee8ee; background: #fff; border-radius: 17px; padding: 15px 18px; color: #45394f; font-size: 15px; font-weight: 800; line-height: 1.5; transition: border-color .15s, background .15s, transform .15s; }
+    .option:hover { transform: translateX(4px); border-color: #bda9f1; background: #faf7ff; }
+    .option.selected { border-color: #946fe5; background: #f5efff; }
+    .option-letter { flex: 0 0 31px; height: 31px; display: grid; place-items: center; border-radius: 10px; background: #f5edf8; color: #8668aa; font-size: 13px; }
+    .option.selected .option-letter { background: #916be5; color: white; }
+    .quiz-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+    .back { border: 0; background: transparent; padding: 10px 4px; color: #8e8393; font-weight: 800; }
+    .back:hover { color: #6649b7; }
+    .hint { color: #b4a9b6; font-size: 12px; font-weight: 700; }
+    .result { text-align: center; padding: 34px 38px 40px; }
+    .result-art { display: grid; place-items: center; width: 142px; height: 142px; margin: 22px auto 20px; border-radius: 42px; background: var(--result-bg); font-size: 86px; transform: rotate(-5deg); box-shadow: inset 0 -9px 0 rgba(55, 40, 60, .06), 0 12px 0 rgba(55, 40, 60, .05); }
+    .result-label { margin-bottom: 7px; color: #8c7b9a; font-weight: 900; font-size: 14px; }
+    .result h2 { margin-bottom: 12px; font-size: clamp(29px, 6vw, 42px); color: var(--result-color); }
+    .result-description { max-width: 530px; margin: 0 auto 21px; color: #6e6571; font-size: 16px; line-height: 1.85; word-break: keep-all; }
+    .traits { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; }
+    .trait { padding: 8px 12px; border-radius: 999px; background: var(--result-bg); color: var(--result-color); font-size: 13px; font-weight: 900; }
+    .result-note { max-width: 530px; margin: 0 auto 27px; padding: 18px 20px; border-radius: 18px; background: #fff9ee; text-align: left; line-height: 1.7; color: #6e6571; font-size: 14px; }
+    .result-note strong { display: block; margin-bottom: 5px; color: #483b4b; }
+    .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+    .secondary { border: 2px solid #e8dff0; color: #7659ab; background: #fff; border-radius: 16px; padding: 16px 22px; font-size: 15px; font-weight: 900; }
+    .secondary:hover { background: #f8f3ff; }
+    .footer { margin-top: 38px; color: #b0a6a6; text-align: center; font-size: 12px; }
+    @media (max-width: 560px) {
+      .page { width: min(100% - 24px, 760px); padding-top: 20px; }
+      header { margin-bottom: 20px; }
+      .header-note { display: none; }
+      .card { border-radius: 25px; }
+      .intro, .quiz, .result { padding-left: 22px; padding-right: 22px; }
+      .intro { padding-top: 34px; }
+      .character-row { gap: 8px; }
+      .character-peek { width: 60px; height: 67px; border-radius: 18px; font-size: 30px; }
+      .quiz h2 { min-height: 100px; }
+      .option { padding: 13px; font-size: 14px; }
+      .hint { display: none; }
+      .actions button { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="blob a" aria-hidden="true"></div><div class="blob b" aria-hidden="true"></div>
+  <main class="page">
+    <header><div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> 오피스 캐릭터 연구소</div><span class="header-note">오늘의 나를 발견하는 1분</span></header>
+    <div class="card">
+      <section id="intro" class="screen intro active" aria-labelledby="intro-title">
+        <span class="eyebrow">☕ 5문항 · 약 1분</span>
+        <h1 id="intro-title">나의 <span class="highlight">직장인 캐릭터</span>는?</h1>
+        <p class="intro-copy">회의부터 퇴근 직전까지, 나도 몰랐던 업무 스타일을<br>귀여운 캐릭터로 알아봐요!</p>
+        <div class="character-row" aria-hidden="true"><span class="character-peek">🐰</span><span class="character-peek">🐻</span><span class="character-peek">🐱</span><span class="character-peek">🐥</span></div>
+        <button class="primary" id="start" type="button">테스트 시작하기 →</button>
+        <p class="meta">정답은 없어요. 가장 나다운 답을 골라주세요 💜</p>
+      </section>
+
+      <section id="quiz" class="screen quiz" aria-labelledby="question-title">
+        <div class="quiz-top"><span class="counter">Q <strong id="current-number">1</strong> / 5</span><span>나에게 가까운 답은?</span></div>
+        <div class="progress" role="progressbar" aria-label="테스트 진행률" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1" id="progress"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="question-emoji" id="question-emoji" aria-hidden="true"></div>
+        <h2 id="question-title"></h2>
+        <div class="options" id="options" role="group" aria-labelledby="question-title"></div>
+        <div class="quiz-bottom"><button class="back" id="back" type="button">← 이전 질문</button><span class="hint">선택하면 다음 질문으로 넘어가요</span></div>
+      </section>
+
+      <section id="result" class="screen result" aria-labelledby="result-title">
+        <span class="eyebrow">✨ 테스트 결과</span>
+        <div class="result-art" id="result-art" aria-hidden="true"></div>
+        <p class="result-label">당신의 직장인 캐릭터는</p>
+        <h2 id="result-title"></h2>
+        <p class="result-description" id="result-description"></p>
+        <div class="traits" id="traits"></div>
+        <div class="result-note"><strong>💡 당신의 반짝이는 순간</strong><span id="result-strength"></span></div>
+        <div class="actions"><button class="primary" id="share" type="button">결과 공유하기 ↗</button><button class="secondary" id="restart" type="button">다시 해보기</button></div>
+      </section>
+    </div>
+    <p class="footer">Made for your little office break · 재미로 즐겨주세요!</p>
+  </main>
+  <script>
+    const questions = [
+      { emoji: "📨", title: "출근하자마자 새로운 업무가 도착했다!", options: [
+        ["일단 바로 시작하고 흐름을 만든다", "rabbit"], ["우선순위와 마감부터 정리한다", "bear"],
+        ["함께 일할 사람들의 상황을 살핀다", "cat"], ["더 재미있는 방법이 없을지 떠올린다", "chick"]
+      ]},
+      { emoji: "🗣️", title: "회의에서 내 모습에 가장 가까운 건?", options: [
+        ["아이디어가 떠오르면 먼저 손을 든다", "rabbit"], ["안건과 결론을 깔끔하게 정리한다", "bear"],
+        ["말이 적은 동료의 의견도 챙긴다", "cat"], ["예상 밖의 새로운 관점을 제안한다", "chick"]
+      ]},
+      { emoji: "⚡", title: "갑자기 일정이 바뀌었다면?", options: [
+        ["금방 적응하고 바로 움직인다", "rabbit"], ["변경된 계획을 다시 차분히 세운다", "bear"],
+        ["팀원들이 괜찮은지 먼저 확인한다", "cat"], ["이참에 다른 가능성을 실험해 본다", "chick"]
+      ]},
+      { emoji: "🍰", title: "팀 프로젝트에서 내가 가장 즐기는 역할은?", options: [
+        ["분위기를 띄우고 실행력을 더하기", "rabbit"], ["빈틈없는 일정과 기준 만들기", "bear"],
+        ["서로의 강점을 이어 주기", "cat"], ["새로운 콘셉트와 해결책 찾기", "chick"]
+      ]},
+      { emoji: "🌆", title: "퇴근 직전, 오늘을 돌아보며 드는 생각은?", options: [
+        ["오늘도 많이 해냈어!", "rabbit"], ["할 일을 잘 마무리해서 든든해", "bear"],
+        ["함께한 사람들 덕분에 좋았어", "cat"], ["내일은 이걸 새롭게 해볼까?", "chick"]
+      ]}
+    ];
+    const characters = {
+      rabbit: { name: "에너지 토끼 🐰", emoji: "🐰", color: "#d45870", bg: "#ffe2e8", description: "생각한 순간 행동으로 옮기는 팀의 활력소! 당신의 씩씩한 첫걸음은 망설이는 동료들에게 용기를 줘요.", traits: ["#빠른 실행", "#긍정 에너지", "#도전 좋아"], strength: "새로운 일을 시작할 때 누구보다 먼저 길을 열고, 팀의 속도를 기분 좋게 올려줘요." },
+      bear: { name: "든든한 계획 곰 🐻", emoji: "🐻", color: "#7855b6", bg: "#e8ddff", description: "복잡한 일도 차근차근 풀어내는 믿음직한 정리왕! 당신이 세운 계획은 팀을 편안하게 앞으로 나아가게 해요.", traits: ["#꼼꼼한 계획", "#꾸준함", "#믿음직"], strength: "흩어진 정보를 한눈에 보이게 정리하고, 중요한 마감을 끝까지 책임져요." },
+      cat: { name: "다정한 공감 고양이 🐱", emoji: "🐱", color: "#3b9a79", bg: "#dff6e9", description: "사람의 마음을 읽고 팀을 부드럽게 연결하는 소통 천재! 당신과 함께라면 누구나 편하게 자기 생각을 꺼낼 수 있어요.", traits: ["#세심한 배려", "#소통 달인", "#팀워크"], strength: "의견이 엇갈릴 때 각자의 마음을 살피고, 모두가 함께 갈 수 있는 길을 찾아요." },
+      chick: { name: "반짝이는 아이디어 병아리 🐥", emoji: "🐥", color: "#ad780e", bg: "#fff0bf", description: "익숙한 문제에도 새 시선을 더하는 호기심 대장! 당신의 엉뚱하고 신선한 생각이 팀에 즐거운 변화를 만들어요.", traits: ["#창의력", "#호기심 가득", "#새로운 시선"], strength: "막힌 문제 앞에서 다른 가능성을 발견하고, 평범한 하루에 작은 영감을 더해요." }
+    };
+
+    const screens = ["intro", "quiz", "result"];
+    let current = 0;
+    let answers = Array(questions.length).fill(null);
+    const $ = id => document.getElementById(id);
+    function showScreen(name) {
+      screens.forEach(id => $(id).classList.toggle("active", id === name));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function renderQuestion() {
+      const question = questions[current];
+      $("current-number").textContent = current + 1;
+      $("progress").setAttribute("aria-valuenow", current + 1);
+      $("progress-fill").style.width = `${(current + 1) / questions.length * 100}%`;
+      $("question-emoji").textContent = question.emoji;
+      $("question-title").textContent = question.title;
+      $("options").replaceChildren(...question.options.map(([label], index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option" + (answers[current] === index ? " selected" : "");
+        button.setAttribute("aria-pressed", answers[current] === index ? "true" : "false");
+        button.innerHTML = `<span class="option-letter" aria-hidden="true">${String.fromCharCode(65 + index)}</span><span></span>`;
+        button.lastElementChild.textContent = label;
+        button.addEventListener("click", () => {
+          answers[current] = index;
+          if (current < questions.length - 1) { current++; renderQuestion(); }
+          else renderResult();
+        });
+        return button;
+      }));
+      $("back").textContent = current === 0 ? "← 처음으로" : "← 이전 질문";
+      showScreen("quiz");
+    }
+    function renderResult() {
+      const scores = { rabbit: 0, bear: 0, cat: 0, chick: 0 };
+      answers.forEach((answer, index) => { if (answer !== null) scores[questions[index].options[answer][1]]++; });
+      const winner = Object.keys(scores).reduce((best, key) => scores[key] > scores[best] ? key : best);
+      const character = characters[winner];
+      $("result").style.setProperty("--result-color", character.color);
+      $("result").style.setProperty("--result-bg", character.bg);
+      $("result-art").textContent = character.emoji;
+      $("result-title").textContent = character.name;
+      $("result-description").textContent = character.description;
+      $("result-strength").textContent = character.strength;
+      $("traits").replaceChildren(...character.traits.map(tag => { const span = document.createElement("span"); span.className = "trait"; span.textContent = tag; return span; }));
+      $("share").dataset.result = winner;
+      showScreen("result");
+    }
+    $("start").addEventListener("click", () => { current = 0; answers = Array(questions.length).fill(null); renderQuestion(); });
+    $("back").addEventListener("click", () => { if (current === 0) showScreen("intro"); else { current--; renderQuestion(); } });
+    $("restart").addEventListener("click", () => { current = 0; answers = Array(questions.length).fill(null); showScreen("intro"); });
+    $("share").addEventListener("click", async () => {
+      const character = characters[$("share").dataset.result];
+      const shareData = { title: "나의 직장인 캐릭터는?", text: `나의 직장인 캐릭터는 ${character.name}! ${character.description}`, url: location.protocol.startsWith("http") ? location.href : undefined };
+      try {
+        if (navigator.share) await navigator.share(shareData);
+        else if (navigator.clipboard) { await navigator.clipboard.writeText([shareData.text, shareData.url].filter(Boolean).join("\n")); alert("결과를 복사했어요! 친구에게 공유해 보세요 💜"); }
+        else prompt("결과를 복사해 공유해 보세요", shareData.text);
+      } catch (error) { if (error.name !== "AbortError") prompt("결과를 복사해 공유해 보세요", shareData.text); }
+    });
+  </script>
+</body>
+</html>
