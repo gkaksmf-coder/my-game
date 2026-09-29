@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff8ee">
+  <meta name="description" content="직장인 캐릭터 테스트와 두 가지 미니게임을 즐길 수 있는 작은 놀이터">
+  <title>오피스 놀이터 | 테스트와 미니게임</title>
+  <style>
+    :root { font-family: "Arial Rounded MT Bold", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; color: #392e47; background: #fff8ee; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 4% 10%, #ffe1e8 0 12%, transparent 13%), radial-gradient(circle at 95% 92%, #def3e8 0 16%, transparent 17%), #fff8ee; }
+    .wrap { width: min(100% - 32px, 960px); margin: 0 auto; padding: 42px 0 58px; }
+    header { text-align: center; margin: 0 auto 31px; }
+    .eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #f0e7ff; color: #7554b5; font-size: 13px; font-weight: 900; }
+    h1 { margin: 14px 0 10px; font-size: clamp(34px, 7vw, 58px); letter-spacing: -2.5px; }
+    .intro { margin: 0; color: #85798a; font-size: 16px; font-weight: 700; line-height: 1.7; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card { display: flex; flex-direction: column; min-height: 350px; padding: 25px; border: 2px solid #f1e7e2; border-radius: 27px; background: #fff; box-shadow: 0 9px 0 #efe5dd, 0 18px 32px #694c6314; transition: transform .18s, box-shadow .18s; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 14px 0 #efe5dd, 0 24px 38px #694c6319; }
+    .art { display: grid; place-items: center; width: 94px; height: 94px; margin-bottom: 23px; border-radius: 28px; background: var(--soft); font-size: 53px; transform: rotate(-5deg); box-shadow: inset 0 -6px 0 #49313a10; }
+    .number { margin: 0 0 7px; color: var(--accent); font-size: 12px; font-weight: 900; letter-spacing: 1.2px; }
+    h2 { margin: 0 0 9px; font-size: 23px; letter-spacing: -.8px; }
+    .description { margin: 0 0 24px; color: #7b7180; font-size: 14px; line-height: 1.7; word-break: keep-all; }
+    .open { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; margin-top: auto; padding: 10px 16px; border-radius: 14px; background: var(--accent); box-shadow: 0 5px 0 var(--shadow); color: #fff; text-decoration: none; font-size: 15px; font-weight: 900; }
+    .open:hover { filter: brightness(1.06); }
+    .open:focus-visible { outline: 3px solid #433256; outline-offset: 4px; }
+    footer { margin-top: 35px; text-align: center; color: #afa4a9; font-size: 12px; font-weight: 700; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; max-width: 450px; margin: auto; } .card { min-height: 260px; } .art { margin-bottom: 16px; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header><span class="eyebrow">☕ 바쁜 하루 속 작은 쉬는 시간</span><h1>오피스 놀이터 ✦</h1><p class="intro">테스트 하나, 미니게임 둘.<br>마음에 드는 걸 골라 잠깐 놀다 가요!</p></header>
+    <div class="grid">
+      <article class="card" style="--soft:#ffe1e9;--accent:#d6607c;--shadow:#aa4561"><div class="art" aria-hidden="true">🐰</div><p class="number">01 · CHARACTER TEST</p><h2>직장인 캐릭터 테스트</h2><p class="description">질문 5개에 답하고 나의 업무 스타일을 귀여운 캐릭터로 만나보세요.</p><a class="open" href="office-character-test.html">테스트 시작하기 →</a></article>
+      <article class="card" style="--soft:#e8dfff;--accent:#7d5bce;--shadow:#5c3dab"><div class="art" aria-hidden="true">🧑‍💼</div><p class="number">02 · DODGE GAME</p><h2>업무 폭탄 피하기</h2><p class="description">메일·회의·전화를 피하고, 커피와 책으로 에너지를 채우며 오래 버텨보세요.</p><a class="open" href="office-work-bomb-game.html">게임 시작하기 →</a></article>
+      <article class="card" style="--soft:#def5e9;--accent:#3e9a73;--shadow:#2e7559"><div class="art" aria-hidden="true">☕</div><p class="number">03 · LADDER GAME</p><h2>커피 내기 사다리</h2><p class="description">2~8명이 함께 사다리를 타고 오늘의 커피 담당을 정해보세요.</p><a class="open" href="coffee-ladder-game.html">사다리 타기 →</a></article>
+    </div>
+    <footer>Made for your little office break · 재미로 즐겨주세요!</footer>
+  </main>
+</body>
+</html>
