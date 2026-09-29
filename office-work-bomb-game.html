@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8ec">
+  <meta name="description" content="떨어지는 업무를 피하고 커피와 책을 받으며 오래 버티는 직장인 게임">
+  <title>업무 폭탄 피하기 ☕</title>
+  <style>
+    :root { font-family: "Arial Rounded MT Bold", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; color: #3d314b; background: #fff8ec; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100svh; background: radial-gradient(circle at 8% 8%, #ffe0e9 0 16%, transparent 17%), radial-gradient(circle at 96% 100%, #e3f5eb 0 20%, transparent 21%), #fff8ec; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible, .playfield:focus-visible { outline: 3px solid #9a73e8; outline-offset: 3px; }
+    .wrap { width: min(100% - 24px, 810px); margin: auto; padding: 18px 0 28px; }
+    .heading { text-align: center; margin: 0 0 15px; }
+    .eyebrow { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #efe6ff; color: #7853bf; font-size: 12px; font-weight: 900; }
+    h1 { margin: 9px 0 4px; font-size: clamp(28px, 5vw, 42px); letter-spacing: -1.8px; }
+    .subtitle { margin: 0; color: #8d8192; font-size: 13px; font-weight: 700; }
+    .game-shell { padding: 13px; background: #fff; border: 2px solid #f1e6df; border-radius: 26px; box-shadow: 0 11px 0 #efe4d9, 0 22px 40px #9b7d8620; }
+    .hud { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 1px 5px 11px; font-weight: 900; }
+    .hud-item { display: flex; align-items: center; gap: 7px; font-size: 14px; }
+    .hud-item strong { color: #7654cb; font-size: 22px; font-variant-numeric: tabular-nums; }
+    .energy-display { color: #e0607b; letter-spacing: 2px; white-space: nowrap; }
+    .energy-display strong { color: #e0607b; }
+    .playfield { position: relative; width: 100%; height: clamp(420px, 67svh, 570px); overflow: hidden; border: 2px solid #eeddec; border-radius: 20px; background: #faf5ff; touch-action: none; user-select: none; }
+    canvas { display: block; width: 100%; height: 100%; }
+    .overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: #fffaf0c9; backdrop-filter: blur(7px); text-align: center; }
+    .overlay[hidden] { display: none; }
+    .panel { width: min(100%, 420px); padding: 29px 25px; border: 2px solid #f2e6e6; border-radius: 26px; background: #fff; box-shadow: 0 9px 0 #efe5e1; }
+    .panel-icon { display: block; margin-bottom: 7px; font-size: 68px; line-height: 1.1; }
+    .panel h2 { margin: 0 0 10px; font-size: clamp(26px, 6vw, 36px); letter-spacing: -1.3px; }
+    .panel p { margin: 0 auto 18px; color: #776b7b; font-size: 14px; line-height: 1.7; word-break: keep-all; }
+    .rules { display: flex; justify-content: center; flex-wrap: wrap; gap: 7px; margin: 0 0 20px; }
+    .rule { padding: 7px 9px; border-radius: 10px; background: #f8f2ff; color: #694f94; font-size: 12px; font-weight: 900; }
+    .primary { border: 0; border-radius: 14px; padding: 14px 25px; background: #8160da; box-shadow: 0 5px 0 #6042b1; color: #fff; font-size: 16px; font-weight: 900; transition: transform .15s, box-shadow .15s; }
+    .primary:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #6042b1; }
+    .primary:active { transform: translateY(4px); box-shadow: 0 1px 0 #6042b1; }
+    .final-score { color: #7350cb !important; font-size: 22px !important; font-weight: 900; }
+    .control-hint { margin: 12px 3px 1px; text-align: center; color: #8c8191; font-size: 12px; font-weight: 800; }
+    .touch-controls { display: flex; gap: 12px; margin-top: 13px; }
+    .touch-controls button { flex: 1; min-height: 55px; border: 2px solid #e8dafb; border-radius: 15px; background: #f6f0ff; color: #7654c7; font-size: 20px; font-weight: 900; touch-action: none; }
+    .touch-controls button:active { background: #e8d9ff; }
+    .legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 16px; padding: 14px 4px 0; color: #796e80; font-size: 12px; font-weight: 800; }
+    .legend b { color: #e0607b; }
+    @media (min-width: 650px) { .touch-controls { display: none; } }
+    @media (max-width: 430px) { .wrap { padding-top: 12px; } .heading { margin-bottom: 12px; } .game-shell { padding: 9px; border-radius: 20px; } .hud-item { font-size: 12px; } .hud-item strong { font-size: 18px; } .playfield { height: clamp(400px, 58svh, 510px); } .panel { padding: 22px 17px; } }
+    @media (prefers-reduced-motion: reduce) { .primary { transition: none; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="heading"><span class="eyebrow">☕ 잠깐의 퇴근 도전</span><h1>업무 폭탄 피하기!</h1><p class="subtitle">메일·회의·전화를 피하고 오늘도 무사히 퇴근해요</p></div>
+    <section class="game-shell" aria-label="업무 폭탄 피하기 게임">
+      <div class="hud" aria-live="off">
+        <div class="hud-item">⏱ 버틴 시간 <strong id="score">0.0</strong>초</div>
+        <div class="hud-item">⚡ 에너지 <strong id="energy">2</strong><span class="energy-display" id="hearts" aria-hidden="true">♥♥</span></div>
+      </div>
+      <div class="playfield" id="playfield" tabindex="0" aria-label="게임 화면. 방향키로 이동하거나 화면 왼쪽 또는 오른쪽을 길게 누르세요.">
+        <canvas id="game" aria-hidden="true"></canvas>
+        <div class="overlay" id="start-overlay">
+          <div class="panel"><span class="panel-icon" aria-hidden="true">🧑‍💼</span><h2>칼퇴할 준비됐나요?</h2><p>떨어지는 업무를 피하며 최대한 오래 버텨보세요.<br>커피와 책은 든든한 에너지 충전!</p><div class="rules"><span class="rule">☕ 커피 +1</span><span class="rule">📚 책 +1</span><span class="rule">📧📅📞 업무 -2</span></div><button class="primary" id="start-button" type="button">게임 시작하기 →</button></div>
+        </div>
+        <div class="overlay" id="gameover-overlay" hidden>
+          <div class="panel"><span class="panel-icon" aria-hidden="true">🌙</span><h2>야근 확정!</h2><p class="final-score">버틴 시간 <span id="final-score">0.0</span>초</p><p>오늘도 열심히 버텼어요. 커피 한 잔 마시고 다시 도전해요!</p><button class="primary" id="restart-button" type="button">다시 하기 ↻</button></div>
+        </div>
+      </div>
+      <div class="touch-controls" aria-label="휴대폰 이동 버튼"><button id="left-button" type="button" aria-label="왼쪽으로 이동">← 왼쪽</button><button id="right-button" type="button" aria-label="오른쪽으로 이동">오른쪽 →</button></div>
+      <p class="control-hint">⌨️ 방향키 ← → &nbsp;·&nbsp; 📱 화면 왼쪽 / 오른쪽을 길게 터치</p>
+    </section>
+    <div class="legend"><span>📧 메일</span><span>📅 회의</span><span>📞 전화 <b>−2</b></span><span>☕ 커피 <b>+1</b></span><span>📚 책 <b>+1</b></span></div>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.getElementById('game');
+      const ctx = canvas.getContext('2d');
+      const field = document.getElementById('playfield');
+      const scoreEl = document.getElementById('score');
+      const energyEl = document.getElementById('energy');
+      const heartsEl = document.getElementById('hearts');
+      const startOverlay = document.getElementById('start-overlay');
+      const gameoverOverlay = document.getElementById('gameover-overlay');
+      const finalScoreEl = document.getElementById('final-score');
+      const types = [
+        { emoji: '📧', kind: 'work', bg: '#ffe2e9' },
+        { emoji: '📅', kind: 'work', bg: '#e9e0ff' },
+        { emoji: '📞', kind: 'work', bg: '#ffe9d5' },
+        { emoji: '☕', kind: 'boost', bg: '#fff1bf' },
+        { emoji: '📚', kind: 'boost', bg: '#dff5e9' }
+      ];
+      let width = 0, height = 0, lastFrame = 0, spawnClock = 0, elapsed = 0;
+      let playing = false, energy = 2, playerX = 0, items = [], particles = [], flash = null;
+      const keys = { left: false, right: false };
+      let pointerDirection = 0;
+
+      function resize() {
+        const rect = field.getBoundingClientRect();
+        const oldWidth = width;
+        width = rect.width;
+        height = rect.height;
+        playerX = oldWidth ? playerX / oldWidth * width : width / 2;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        draw();
+      }
+      function roundRect(x, y, w, h, radius, fill) {
+        ctx.fillStyle = fill;
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, radius);
+        ctx.fill();
+      }
+      function drawBackground() {
+        ctx.fillStyle = '#fbf7ff';
+        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = '#eadff6';
+        ctx.lineWidth = 2;
+        for (let x = 36; x < width; x += 92) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+        }
+        ctx.fillStyle = '#f2eafa';
+        ctx.fillRect(0, height - 39, width, 39);
+        ctx.fillStyle = '#e3d5f0';
+        ctx.fillRect(0, height - 41, width, 3);
+        ctx.font = '15px sans-serif';
+        ctx.fillText('✦', 18, 33);
+        ctx.fillText('✦', width - 42, 67);
+      }
+      function drawPlayer() {
+        const x = playerX, y = height - 72;
+        ctx.fillStyle = '#d8c4e7';
+        ctx.beginPath(); ctx.ellipse(x, height - 34, 29, 7, 0, 0, Math.PI * 2); ctx.fill();
+        roundRect(x - 25, y + 17, 50, 38, 15, '#7f62cf');
+        roundRect(x - 8, y + 18, 16, 22, 5, '#fff');
+        ctx.fillStyle = '#ffddc6';
+        ctx.beginPath(); ctx.arc(x, y, 24, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#59445a';
+        ctx.beginPath(); ctx.arc(x - 7, y - 1, 2.1, 0, Math.PI * 2); ctx.arc(x + 7, y - 1, 2.1, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#bd6c79'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.arc(x, y + 5, 5, .2, Math.PI - .2); ctx.stroke();
+        ctx.fillStyle = '#ef9ba9';
+        ctx.beginPath(); ctx.arc(x - 16, y + 5, 3.6, 0, Math.PI * 2); ctx.arc(x + 16, y + 5, 3.6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#684959';
+        ctx.beginPath(); ctx.arc(x, y - 11, 25, Math.PI, Math.PI * 2); ctx.lineTo(x + 24, y - 8); ctx.lineTo(x - 24, y - 8); ctx.fill();
+        roundRect(x - 24, y - 26, 48, 12, 7, '#684959');
+      }
+      function drawItem(item) {
+        ctx.save();
+        ctx.translate(item.x, item.y);
+        ctx.rotate(item.angle);
+        roundRect(-24, -24, 48, 48, 14, item.type.bg);
+        ctx.fillStyle = 'rgba(65,46,72,.10)';
+        ctx.font = '29px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(item.type.emoji, 0, 1);
+        ctx.restore();
+      }
+      function draw() {
+        if (!width || !height) return;
+        drawBackground();
+        items.forEach(drawItem);
+        drawPlayer();
+        particles.forEach(p => {
+          ctx.globalAlpha = Math.max(0, p.life / .55);
+          ctx.fillStyle = p.color;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        if (flash) {
+          ctx.globalAlpha = Math.max(0, flash.life / .28) * .25;
+          ctx.fillStyle = flash.color;
+          ctx.fillRect(0, 0, width, height);
+          ctx.globalAlpha = 1;
+        }
+      }
+      function updateHud() {
+        scoreEl.textContent = elapsed.toFixed(1);
+        energyEl.textContent = energy;
+        heartsEl.textContent = '♥'.repeat(Math.max(0, energy));
+      }
+      function spawnItem() {
+        const roll = Math.random();
+        const type = types[roll < .72 ? Math.floor(Math.random() * 3) : roll < .86 ? 3 : 4];
+        const safeMargin = Math.min(37, width / 5);
+        items.push({
+          x: safeMargin + Math.random() * Math.max(1, width - safeMargin * 2),
+          y: -32, type, angle: (Math.random() - .5) * .35,
+          speed: 145 + elapsed * 5.5 + Math.random() * 50
+        });
+      }
+      function burst(x, y, color) {
+        for (let i = 0; i < 9; i++) {
+          const a = i * Math.PI * 2 / 9;
+          particles.push({ x, y, vx: Math.cos(a) * (55 + Math.random() * 50), vy: Math.sin(a) * (55 + Math.random() * 50), life: .55, size: 3 + Math.random() * 2, color });
+        }
+      }
+      function endGame() {
+        playing = false;
+        pointerDirection = 0;
+        keys.left = keys.right = false;
+        finalScoreEl.textContent = elapsed.toFixed(1);
+        gameoverOverlay.hidden = false;
+        document.getElementById('restart-button').focus();
+      }
+      function update(dt) {
+        elapsed += dt;
+        spawnClock += dt;
+        const interval = Math.max(.38, 1.05 - elapsed * .009);
+        while (spawnClock >= interval) { spawnClock -= interval; spawnItem(); }
+        const direction = pointerDirection || ((keys.right ? 1 : 0) - (keys.left ? 1 : 0));
+        playerX = Math.max(27, Math.min(width - 27, playerX + direction * Math.min(520, 320 + elapsed * 2) * dt));
+        for (let i = items.length - 1; i >= 0; i--) {
+          const item = items[i];
+          item.y += item.speed * dt;
+          if (Math.abs(item.x - playerX) < 39 && Math.abs(item.y - (height - 59)) < 40) {
+            if (item.type.kind === 'boost') {
+              energy = Math.min(5, energy + 1);
+              burst(item.x, item.y, '#82caa1');
+              flash = { color: '#75dbab', life: .28 };
+            } else {
+              energy = Math.max(0, energy - 2);
+              burst(item.x, item.y, '#f08ea3');
+              flash = { color: '#f27794', life: .28 };
+            }
+            items.splice(i, 1);
+            updateHud();
+            if (energy <= 0) { endGame(); break; }
+          } else if (item.y > height + 35) items.splice(i, 1);
+        }
+        particles = particles.filter(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; return p.life > 0; });
+        if (flash) { flash.life -= dt; if (flash.life <= 0) flash = null; }
+        updateHud();
+      }
+      function frame(now) {
+        if (!playing) return;
+        const dt = Math.min((now - lastFrame) / 1000, .05);
+        lastFrame = now;
+        update(dt);
+        draw();
+        if (playing) requestAnimationFrame(frame);
+      }
+      function startGame() {
+        playing = true;
+        elapsed = 0; spawnClock = 0; energy = 2; items = []; particles = []; flash = null;
+        playerX = width / 2;
+        keys.left = keys.right = false; pointerDirection = 0;
+        startOverlay.hidden = true; gameoverOverlay.hidden = true;
+        updateHud(); draw();
+        field.focus();
+        lastFrame = performance.now();
+        requestAnimationFrame(frame);
+      }
+      document.getElementById('start-button').addEventListener('click', startGame);
+      document.getElementById('restart-button').addEventListener('click', startGame);
+      document.addEventListener('keydown', event => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          if (playing) event.preventDefault();
+          keys[event.key === 'ArrowLeft' ? 'left' : 'right'] = true;
+        }
+      });
+      document.addEventListener('keyup', event => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') keys[event.key === 'ArrowLeft' ? 'left' : 'right'] = false;
+      });
+      window.addEventListener('blur', () => { keys.left = keys.right = false; pointerDirection = 0; });
+      function setTouchDirection(event) {
+        if (!playing) return;
+        const rect = field.getBoundingClientRect();
+        pointerDirection = event.clientX - rect.left < rect.width / 2 ? -1 : 1;
+      }
+      field.addEventListener('pointerdown', event => { if (!playing) return; field.setPointerCapture(event.pointerId); setTouchDirection(event); });
+      field.addEventListener('pointermove', event => { if (playing && event.buttons) setTouchDirection(event); });
+      field.addEventListener('pointerup', () => { pointerDirection = 0; });
+      field.addEventListener('pointercancel', () => { pointerDirection = 0; });
+      for (const [id, direction] of [['left-button', -1], ['right-button', 1]]) {
+        const button = document.getElementById(id);
+        button.addEventListener('pointerdown', event => { if (!playing) return; button.setPointerCapture(event.pointerId); pointerDirection = direction; });
+        button.addEventListener('pointerup', () => { pointerDirection = 0; });
+        button.addEventListener('pointercancel', () => { pointerDirection = 0; });
+      }
+      window.addEventListener('resize', resize);
+      resize(); updateHud();
+    })();
+  </script>
+</body>
+</html>
