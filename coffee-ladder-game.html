@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fff8ed">
+<title>커피 내기 사다리 타기 ☕</title>
+<style>
+:root{font-family:"Arial Rounded MT Bold","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;color:#3d314a;background:#fff8ed}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;min-height:100vh;background:radial-gradient(circle at 0 0,#ffe2e8 0 13%,transparent 14%),radial-gradient(circle at 100% 100%,#e0f4e9 0 15%,transparent 16%),#fff8ed}button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:3px solid #9570dc;outline-offset:3px}.wrap{width:min(100% - 24px,900px);margin:auto;padding:28px 0 55px}header{text-align:center;margin-bottom:21px}.badge{display:inline-block;padding:7px 13px;border-radius:999px;background:#efe7ff;color:#7652b7;font-size:13px;font-weight:900}h1{margin:10px 0 6px;font-size:clamp(29px,6vw,46px);letter-spacing:-2px}.subtitle{margin:0;color:#8c8190;font-size:14px;font-weight:700}.card{border:2px solid #f2e7e0;border-radius:27px;background:#fff;box-shadow:0 11px 0 #efe5da,0 22px 38px #70495816}.setup{padding:23px 26px 25px;margin-bottom:19px}.setup-top{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:7px;margin-bottom:12px}.setup h2,.board-heading h2{margin:0;font-size:19px;letter-spacing:-.7px}.small{color:#a297a2;font-size:12px;font-weight:800}.form-row{display:flex;align-items:stretch;gap:12px}textarea{width:100%;min-height:88px;resize:vertical;padding:14px 16px;border:2px solid #ece3ef;border-radius:15px;background:#fffcff;color:#3d314a;font-size:15px;line-height:1.7}textarea::placeholder{color:#b5a9b9}.primary{flex:0 0 auto;align-self:stretch;min-width:142px;border:0;border-radius:15px;padding:12px 21px;background:#805dda;box-shadow:0 5px 0 #603db3;color:#fff;font-size:16px;font-weight:900;transition:transform .15s,box-shadow .15s}.primary:hover{transform:translateY(-2px);box-shadow:0 7px 0 #603db3}.primary:active{transform:translateY(4px);box-shadow:0 1px 0 #603db3}.message{min-height:21px;margin:10px 2px 0;color:#b94d69;font-size:13px;font-weight:800}.board-card{padding:20px 22px 25px}.board-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:0 3px 12px}.board-heading p{margin:0;color:#9c8f9e;font-size:12px;font-weight:800}.board-scroll{overflow-x:auto;padding:4px 3px 9px;scrollbar-color:#d8c6f5 #faf7fd}.board{min-width:290px;width:100%;position:relative}.names,.outcomes{position:relative;height:62px}.name-button,.outcome{position:absolute;left:var(--x);transform:translateX(-50%);width:calc(100% / var(--count,4) - 5px);min-width:0;display:grid;place-items:center;text-align:center;border-radius:13px;font-weight:900;line-height:1.25;word-break:break-all}.name-button{top:0;min-height:49px;padding:5px 4px;border:2px solid #e7d9f7;background:#f5efff;color:#7053ae;font-size:13px;transition:background .15s,transform .15s}.name-button:hover:not(:disabled){background:#eadfff;transform:translateX(-50%) translateY(-3px)}.name-button:disabled{cursor:default;opacity:.65}.name-button.active{background:#865edc;color:#fff;border-color:#865edc;opacity:1}.outcome{top:10px;min-height:48px;padding:4px;border:2px solid #e6e8e4;background:#f8f8f4;color:#827c85;font-size:11px}.outcome.winner{border-color:#ffd5a7;background:#fff0d8;color:#aa641f}.outcome.landed{outline:3px solid #845edb;outline-offset:2px}.ladder{display:block;width:100%;height:auto;overflow:visible;border:2px solid #f3e8ef;border-radius:18px;background:repeating-linear-gradient(0deg,#fdfaff 0 37px,#faf5ff 38px 39px)}.rail{stroke:#c7b3df;stroke-width:5;stroke-linecap:round}.rung{stroke:#ab89d2;stroke-width:5;stroke-linecap:round}.trace{fill:none;stroke:#f58c9e;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 2px #d85c7b55)}.marker{fill:#fff;stroke:#ec708c;stroke-width:6;filter:drop-shadow(0 2px 3px #b35b8355)}.empty{min-height:245px;display:grid;place-items:center;padding:30px;border:2px dashed #e9d9ed;border-radius:18px;background:#fffcff;color:#9a8c9d;text-align:center;line-height:1.7;font-weight:800}.empty span{display:block;font-size:46px;margin-bottom:7px}.result{margin-top:17px;min-height:66px;display:flex;align-items:center;justify-content:center;border-radius:17px;background:#f8f2ff;color:#7556ae;text-align:center;font-size:15px;font-weight:900;line-height:1.5;padding:13px 18px}.result.prize{background:#fff0d8;color:#a85e1b}.result.pass{background:#e8f7ef;color:#397e5c}.footnote{margin:23px 0 0;text-align:center;color:#b0a3aa;font-size:12px}@media(max-width:600px){.wrap{padding-top:20px}.setup,.board-card{padding:19px 16px}.form-row{flex-direction:column}.primary{min-height:48px}.board-heading{align-items:flex-start;flex-direction:column;gap:4px}}@media(prefers-reduced-motion:reduce){.primary,.name-button{transition:none}}
+.name-button,.outcome{max-width:115px}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header><span class="badge">☕ 오늘 커피는 누가?</span><h1>커피 내기 사다리 타기</h1><p class="subtitle">이름을 넣고 사다리를 타면 운명의 커피 담당이 정해져요!</p></header>
+<section class="card setup" aria-labelledby="setup-title"><div class="setup-top"><h2 id="setup-title">참가자 이름 입력 ✏️</h2><span class="small">2~8명 · 한 줄에 한 명 또는 쉼표로 구분</span></div><div class="form-row"><textarea id="names-input" aria-label="참가자 이름" spellcheck="false">민지, 준호, 서연, 도윤</textarea><button class="primary" id="start-button" type="button">시작 🎲</button></div><p class="message" id="message" role="alert"></p></section>
+<section class="card board-card" aria-labelledby="board-title"><div class="board-heading"><h2 id="board-title">사다리 보드 🪜</h2><p>시작 후 위의 이름을 눌러보세요</p></div><div class="board-scroll"><div class="empty" id="empty"><div><span aria-hidden="true">🪜</span>참가자를 입력하고 시작을 눌러주세요!</div></div><div class="board" id="board" hidden><div class="names" id="names"></div><svg class="ladder" id="ladder" viewBox="0 0 1000 470" role="img" aria-label="무작위 사다리"></svg><div class="outcomes" id="outcomes"></div></div></div><div class="result" id="result" role="status" aria-live="polite">누가 커피를 쏠지 두근두근 ☕</div></section>
+<p class="footnote">사다리는 시작할 때마다 새로 만들어져요. 재미로 즐겨주세요!</p>
+</main>
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = id => document.getElementById(id);
+  const TOP = 24, BOTTOM = 446, ROWS = 12;
+  let game = null, animating = false, animationId = null;
+  function parseNames() { return $('names-input').value.split(/[\n,]+/).map(name => name.trim()).filter(Boolean); }
+  function randomInt(max) { return Math.floor(Math.random() * max); }
+  function xAt(index, count) { return 150 + index * 700 / (count - 1); }
+  function makeLadder(count) {
+    let rows, rungCount;
+    do {
+      rows = []; rungCount = 0;
+      for (let row = 0; row < ROWS; row++) {
+        const rungs = [];
+        for (let column = 0; column < count - 1; column++) {
+          if (Math.random() < .48) { rungs.push(column); column++; }
+        }
+        rungCount += rungs.length;
+        rows.push(rungs);
+      }
+    } while (rungCount < Math.max(3, count * 2));
+    return rows;
+  }
+  function svgElement(tag, attributes) {
+    const element = document.createElementNS(NS, tag);
+    for (const [name, value] of Object.entries(attributes)) element.setAttribute(name, value);
+    return element;
+  }
+  function pathFor(startIndex) {
+    let column = startIndex;
+    const points = [[xAt(column, game.names.length), TOP]];
+    game.rows.forEach((rungs, rowIndex) => {
+      const y = TOP + (BOTTOM - TOP) * (rowIndex + 1) / (ROWS + 1);
+      points.push([xAt(column, game.names.length), y]);
+      if (rungs.includes(column)) column++;
+      else if (rungs.includes(column - 1)) column--;
+      points.push([xAt(column, game.names.length), y]);
+    });
+    points.push([xAt(column, game.names.length), BOTTOM]);
+    return { points, endIndex: column };
+  }
+  function drawBoard() {
+    const count = game.names.length;
+    const svg = $('ladder'), names = $('names'), outcomes = $('outcomes');
+    svg.replaceChildren(); names.replaceChildren(); outcomes.replaceChildren();
+    $('board').style.setProperty('--count', count);
+    $('board').style.minWidth = Math.max(290, count * 82) + 'px';
+    for (let i = 0; i < count; i++) {
+      const x = xAt(i, count);
+      svg.append(svgElement('line', { x1: x, y1: TOP, x2: x, y2: BOTTOM, class: 'rail' }));
+      const nameButton = document.createElement('button');
+      nameButton.type = 'button'; nameButton.className = 'name-button';
+      nameButton.style.setProperty('--x', `${x / 10}%`);
+      nameButton.style.width = `calc(${Math.min(30, 70 / (count - 1))}% - 8px)`;
+      nameButton.textContent = game.names[i];
+      nameButton.setAttribute('aria-label', `${game.names[i]}의 사다리 결과 보기`);
+      nameButton.addEventListener('click', () => reveal(i));
+      names.append(nameButton);
+      const outcome = document.createElement('div');
+      outcome.className = 'outcome' + (i === game.prizeIndex ? ' winner' : '');
+      outcome.style.setProperty('--x', `${x / 10}%`);
+      outcome.style.width = `calc(${Math.min(30, 70 / (count - 1))}% - 8px)`;
+      outcome.textContent = i === game.prizeIndex ? '☕ 당첨!\n커피 쏘기' : '🌿 통과';
+      outcome.style.whiteSpace = 'pre-line';
+      outcomes.append(outcome);
+    }
+    game.rows.forEach((rungs, rowIndex) => {
+      const y = TOP + (BOTTOM - TOP) * (rowIndex + 1) / (ROWS + 1);
+      rungs.forEach(column => svg.append(svgElement('line', { x1: xAt(column, count), y1: y, x2: xAt(column + 1, count), y2: y, class: 'rung' })));
+    });
+  }
+  function setResult(text, kind = '') {
+    $('result').className = 'result' + (kind ? ` ${kind}` : '');
+    $('result').textContent = text;
+  }
+  function start() {
+    const names = parseNames();
+    if (names.length < 2 || names.length > 8) {
+      $('message').textContent = '참가자 이름을 2명 이상, 8명 이하로 입력해 주세요.';
+      $('names-input').focus(); return;
+    }
+    if (new Set(names).size !== names.length) {
+      $('message').textContent = '같은 이름이 있어요. 서로 다른 이름으로 입력해 주세요.';
+      $('names-input').focus(); return;
+    }
+    $('message').textContent = '';
+    if (animationId !== null) cancelAnimationFrame(animationId);
+    animationId = null; animating = false;
+    game = { names, rows: makeLadder(names.length), prizeIndex: randomInt(names.length) };
+    drawBoard();
+    $('empty').hidden = true; $('board').hidden = false;
+    $('start-button').textContent = '새 사다리 🎲';
+    setResult('이름을 눌러 사다리를 타보세요! ☕');
+  }
+  function reveal(startIndex) {
+    if (!game || animating) return;
+    animating = true;
+    const { points, endIndex } = pathFor(startIndex);
+    const svg = $('ladder');
+    svg.querySelectorAll('.trace, .marker').forEach(node => node.remove());
+    document.querySelectorAll('.name-button').forEach((button, i) => { button.disabled = true; button.classList.toggle('active', i === startIndex); });
+    document.querySelectorAll('.outcome').forEach(node => node.classList.remove('landed'));
+    setResult(`${game.names[startIndex]} 님의 사다리를 따라가는 중... 🪜`);
+    const d = points.map(([x, y], i) => `${i ? 'L' : 'M'} ${x} ${y}`).join(' ');
+    const trace = svgElement('path', { d, class: 'trace' });
+    const marker = svgElement('circle', { cx: points[0][0], cy: points[0][1], r: 11, class: 'marker' });
+    svg.append(trace, marker);
+    const total = trace.getTotalLength();
+    trace.style.strokeDasharray = total;
+    trace.style.strokeDashoffset = total;
+    const duration = Math.max(1700, Math.min(3300, total * 1.45));
+    let startedAt = null;
+    function step(now) {
+      if (startedAt === null) startedAt = now;
+      const t = Math.min(1, (now - startedAt) / duration);
+      const distance = total * t;
+      const point = trace.getPointAtLength(distance);
+      trace.style.strokeDashoffset = total - distance;
+      marker.setAttribute('cx', point.x); marker.setAttribute('cy', point.y);
+      if (t < 1) animationId = requestAnimationFrame(step);
+      else {
+        animationId = null; animating = false;
+        document.querySelectorAll('.name-button').forEach(button => { button.disabled = false; });
+        document.querySelectorAll('.outcome')[endIndex].classList.add('landed');
+        if (endIndex === game.prizeIndex) setResult(`🎉 ${game.names[startIndex]} 님 당첨! 커피 쏘기 ☕`, 'prize');
+        else setResult(`🌿 ${game.names[startIndex]} 님 통과! 커피는 다음 기회에`, 'pass');
+      }
+    }
+    animationId = requestAnimationFrame(step);
+  }
+  $('start-button').addEventListener('click', start);
+  $('names-input').addEventListener('keydown', event => { if (event.ctrlKey && event.key === 'Enter') start(); });
+})();
+</script>
+</body>
+</html>
+
